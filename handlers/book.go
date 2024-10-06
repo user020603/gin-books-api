@@ -85,7 +85,7 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	// add new data, cache is changed, so empty cache
+	// add new data, db is changed, so empty cache
 	config.RedisClient.Del(c, "books_all")
 
 	c.JSON(http.StatusCreated, book)
