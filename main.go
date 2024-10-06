@@ -11,6 +11,7 @@ import (
 func main() {
 	config.InitDB()
 	config.GetDB().AutoMigrate(&models.Book{})
+	config.InitRedis()
 
 	r := gin.Default()
 

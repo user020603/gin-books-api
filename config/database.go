@@ -1,15 +1,33 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"os"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
+var RedisClient *redis.Client
+var ctx = context.Background()
+
+func InitRedis() {
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	_, err := RedisClient.Ping(ctx).Result()
+	if err != nil {
+		fmt.Println("Failed to connect to Redis: ", err)
+		return
+	}
+}
 
 func InitDB() {
 	// Load .env file
