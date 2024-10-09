@@ -10,11 +10,16 @@ import (
 	"gin-books-api/models"
 )
 
+const (
+	cacheKeyBooksAll   = "books_all"
+	cacheKeyBookPrefix = "book_"
+)
+
 // FetchBooksFromDB fetches books from the database, caches them, and returns the result.
 func FetchBooksFromDB(ctx context.Context, cacheKey string) ([]models.Book, error) {
 	var books []models.Book
 	query := config.GetDB().
-		Preload("Author.Books"). // Preload books for each author
+		Preload("Author"). // Preload books for each author
 		Preload("Publisher").
 		Preload("Categories").
 		Preload("Reviews")
@@ -57,8 +62,9 @@ func CreateBook(ctx context.Context, book *models.Book) error {
 	}
 
 	// Invalidate cache
-	cacheKey := "books_all"
-	config.RedisClient.Del(ctx, cacheKey)
+	if err := config.RedisClient.Del(ctx, cacheKeyBooksAll).Err(); err != nil {
+		log.Printf("Failed to invalidate cache: %v", err)
+	}
 
 	return nil
 }
@@ -71,9 +77,13 @@ func UpdateBook(ctx context.Context, id int, book *models.Book) error {
 	}
 
 	// Invalidate cache
-	cacheKey := "book_" + strconv.Itoa(id)
-	config.RedisClient.Del(ctx, cacheKey)
-	config.RedisClient.Del(ctx, "books_all")
+	cacheKey := cacheKeyBookPrefix + strconv.Itoa(id)
+	if err := config.RedisClient.Del(ctx, cacheKey).Err(); err != nil {
+		log.Printf("Failed to invalidate cache: %v", err)
+	}
+	if err := config.RedisClient.Del(ctx, cacheKeyBooksAll).Err(); err != nil {
+		log.Printf("Failed to invalidate cache: %v", err)
+	}
 
 	return nil
 }
@@ -85,9 +95,13 @@ func DeleteBook(ctx context.Context, id int) error {
 	}
 
 	// Invalidate cache
-	cacheKey := "book_" + strconv.Itoa(id)
-	config.RedisClient.Del(ctx, cacheKey)
-	config.RedisClient.Del(ctx, "books_all")
+	cacheKey := cacheKeyBookPrefix + strconv.Itoa(id)
+	if err := config.RedisClient.Del(ctx, cacheKey).Err(); err != nil {
+		log.Printf("Failed to invalidate cache: %v", err)
+	}
+	if err := config.RedisClient.Del(ctx, cacheKeyBooksAll).Err(); err != nil {
+		log.Printf("Failed to invalidate cache: %v", err)
+	}
 
 	return nil
 }
