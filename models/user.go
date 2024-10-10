@@ -7,6 +7,6 @@ type User struct {
 	Password string `json:"password" gorm:"not null"`
 	Active bool `json:"active" gorm:"default:true"`
 
-	Reviews []Review `json:"reviews" gorm:"foreignKey:UserID"`
-	BorrowedBooks []BorrowedBook `json:"borrowed_books" gorm:"foreignKey:UserID"`
+	Reviews []Review `json:"-" gorm:"foreignKey:UserID"`
+	BorrowedBooks []BorrowedBook `json:"-" gorm:"foreignKey:UserID"`
 }

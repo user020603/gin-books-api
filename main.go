@@ -55,5 +55,12 @@ func main() {
     r.PUT("/publishers/:id", handlers.UpdatePublisher)
     r.DELETE("/publishers/:id", handlers.DeletePublisher)
 
+    // Review routes
+    r.GET("/reviews", handlers.GetReviews)
+    r.GET("/reviews/:id", handlers.GetReviewByID)
+    r.POST("/reviews", handlers.CreateReview)
+    r.PUT("/reviews/:id", handlers.UpdateReview)
+    r.DELETE("/reviews/:id", handlers.DeleteReview)
+
     r.Run(":8080")
 }
