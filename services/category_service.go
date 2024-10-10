@@ -17,32 +17,33 @@ const (
 
 // FetchCategoriesFromDB fetches categories from the database, caches them, and returns the result.
 func FetchCategoriesFromDB(ctx context.Context, cacheKey string) ([]models.Category, error) {
-	var categories []models.Category
-	if err := config.GetDB().Preload("Books").Find(&categories).Error; err != nil {
-		log.Printf("Database error while fetching categories: %v", err)
-		return nil, err
-	}
+    var categories []models.Category
+    if err := config.GetDB().Preload("Books").Find(&categories).Error; err != nil {
+        log.Printf("Database error while fetching categories: %v", err)
+        return nil, err
+    }
 
-	// Cache the complete list of authors
-	if err := cache.SetCachedData(ctx, cacheKey, categories, cache.CacheExpiration); err != nil {
-		log.Printf("Redis SET error for key %s: %v", cacheKey, err)
-		// Proceed without caching
-	}
+    // Cache the complete list of categories
+    if err := cache.SetCachedData(ctx, cacheKey, categories, cache.CacheExpiration); err != nil {
+        log.Printf("Redis SET error for key %s: %v", cacheKey, err)
+        // Proceed without caching
+    }
 
-	return categories, nil
+    return categories, nil
 }
 
+// FetchCategoryFromDB fetches a single category from the database, caches it, and returns the result.
 func FetchCategoryFromDB(ctx context.Context, cacheKey string, id int) (*models.Category, error) {
-	var category models.Category
-	if result := config.GetDB().Preload("Books").First(&category, id); result.Error != nil {
-		return nil, result.Error
-	}
+    var category models.Category
+    if result := config.GetDB().Preload("Books").First(&category, id); result.Error != nil {
+        return nil, result.Error
+    }
 
-	if err := cache.SetCachedData(ctx, cacheKey, category, cache.CacheExpiration); err != nil {
-		log.Printf("Failed to cache category: %v", err)
-	}
+    if err := cache.SetCachedData(ctx, cacheKey, category, cache.CacheExpiration); err != nil {
+        log.Printf("Failed to cache category: %v", err)
+    }
 
-	return &category, nil
+    return &category, nil
 }
 
 func CreateCategory(ctx context.Context, category *models.Category) error {

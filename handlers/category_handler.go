@@ -37,12 +37,12 @@ func GetCategories(c *gin.Context) {
 	utils.JSONResponse(c, http.StatusOK, categories)
 }
 
-// GetCategoryByID retrieves an category by its ID and implements caching.
+// GetCategoryByID retrieves a category by its ID and implements caching.
 func GetCategoryByID(c *gin.Context) {
 	ctx := context.Background()
 	idParam := c.Param("id")
 
-	// Validate the categories ID
+	// Validate the category ID
 	id, err := strconv.Atoi(idParam)
 	if err != nil || id <= 0 {
 		utils.ErrorResponse(c, http.StatusBadRequest, "Invalid category ID")

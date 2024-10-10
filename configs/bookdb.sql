@@ -24,13 +24,8 @@ CREATE TABLE books (
     published_year INT,
     author_id INT REFERENCES authors(id) ON DELETE SET NULL,
     publisher_id INT REFERENCES publishers(id) ON DELETE SET NULL,
+    category_id INT REFERENCES categories(id) ON DELETE SET NULL,  -- Added category_id column
     availability BOOLEAN DEFAULT TRUE 
-);
-
-CREATE TABLE book_categories (
-    book_id INT REFERENCES books(id) ON DELETE CASCADE,
-    category_id INT REFERENCES categories(id) ON DELETE CASCADE,
-    PRIMARY KEY (book_id, category_id)
 );
 
 CREATE TABLE users (

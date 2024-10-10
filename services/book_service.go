@@ -21,7 +21,7 @@ func FetchBooksFromDB(ctx context.Context, cacheKey string) ([]models.Book, erro
 	query := config.GetDB().
 		Preload("Author"). // Preload books for each author
 		Preload("Publisher").
-		Preload("Categories").
+		Preload("Category").
 		Preload("Reviews")
 
 	// Fetch all books for caching
@@ -42,7 +42,7 @@ func FetchBooksFromDB(ctx context.Context, cacheKey string) ([]models.Book, erro
 // FetchBookFromDB fetches a single book from the database, caches it, and returns the result.
 func FetchBookFromDB(ctx context.Context, cacheKey string, id int) (*models.Book, error) {
 	var book models.Book
-	if result := config.GetDB().Preload("Author").Preload("Publisher").Preload("Categories").Preload("Reviews").First(&book, id); result.Error != nil {
+	if result := config.GetDB().Preload("Author").Preload("Publisher").Preload("Category").Preload("Reviews").First(&book, id); result.Error != nil {
 		return nil, result.Error
 	}
 
