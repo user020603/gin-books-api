@@ -48,5 +48,12 @@ func main() {
     r.PUT("/categories/:id", handlers.UpdateCategory)
     r.DELETE("/categories/:id", handlers.DeleteCategory)
 
+    // Publisher routes
+    r.GET("/publishers", handlers.GetPublishers)
+    r.GET("/publishers/:id", handlers.GetPublisherByID)
+    r.POST("/publishers", handlers.CreatePublisher)
+    r.PUT("/publishers/:id", handlers.UpdatePublisher)
+    r.DELETE("/publishers/:id", handlers.DeletePublisher)
+
     r.Run(":8080")
 }

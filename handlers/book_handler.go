@@ -121,7 +121,7 @@ func GetBookByID(c *gin.Context) {
 	}
 
 	c.Header("X-Data-Source", "database")
-	utils.JSONResponse(c, http.StatusOK, bookPtr.Reviews)
+	utils.JSONResponse(c, http.StatusOK, bookPtr)
 }
 
 // CreateBook creates a new book and stores it in the database.
